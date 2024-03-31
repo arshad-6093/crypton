@@ -13,6 +13,7 @@ module Crypto.PubKey.Ed25519
     ( SecretKey
     , PublicKey
     , Signature
+    , PublicKey (..)
     -- * Size constants
     , publicKeySize
     , secretKeySize
