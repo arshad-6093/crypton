@@ -12,7 +12,6 @@
 module Crypto.PubKey.Ed25519
     ( SecretKey
     , PublicKey
-    , PublicKey(..)
     , Signature
     -- * Size constants
     , publicKeySize
@@ -29,6 +28,10 @@ module Crypto.PubKey.Ed25519
     , generateSecretKey
     ) where
 
+import Data.Aeson ( withText, FromJSON(parseJSON) )
+import qualified Data.ByteArray as BA
+import qualified Data.ByteString.Base64 as B64
+import Data.Text.Encoding (encodeUtf8)
 import           Data.Word
 import           Foreign.C.Types
 import           Foreign.Ptr
@@ -48,6 +51,12 @@ newtype SecretKey = SecretKey ScrubbedBytes
 -- | An Ed25519 public key
 newtype PublicKey = PublicKey Bytes
     deriving (Show,Eq,ByteArrayAccess,NFData)
+
+instance FromJSON PublicKey where
+    parseJSON = withText "PublicKey" $ \txt ->
+        case B64.decode (encodeUtf8 txt) of
+            Left err -> fail $ "Error decoding Base64: " ++ err
+            Right bs -> return $ PublicKey (BA.convert bs)
 
 -- | An Ed25519 signature
 newtype Signature = Signature Bytes

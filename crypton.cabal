@@ -302,7 +302,10 @@ library
         bytestring,
         memory >=0.14.18,
         basement >=0.0.6,
-        ghc-prim
+        ghc-prim,
+        aeson,
+        base64-bytestring,
+        text
 
     if impl(ghc <8.8)
         buildable: False
